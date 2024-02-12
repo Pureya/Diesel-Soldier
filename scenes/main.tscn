@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bjbkw8o2jpvgk"]
+[gd_scene load_steps=13 format=3 uid="uid://bjbkw8o2jpvgk"]
 
 [ext_resource type="Texture2D" uid="uid://dvm5jwqv4kkqi" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_48xma"]
 [ext_resource type="Texture2D" uid="uid://b1qfmk4kbqgyd" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_o4ljb"]
@@ -20,6 +20,67 @@ sky = SubResource("Sky_djsum")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="Animation" id="Animation_o0jp7"]
+resource_name = "jump"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.1, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.0523599, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_6y5a7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pien3"]
+_data = {
+"RESET": SubResource("Animation_6y5a7"),
+"jump": SubResource("Animation_o0jp7")
+}
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4c15p"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_53j3v"]
@@ -37,7 +98,43 @@ size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_7sm6c")
 
 [node name="Floor2" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26854, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26854, 13)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_7sm6c")
+
+[node name="Step" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 8.5, 1.26854, -0.5)
+use_collision = true
+size = Vector3(3, 1, 5)
+material = SubResource("StandardMaterial3D_7sm6c")
+
+[node name="Step2" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 8.5, 0.26854, -4.5)
+use_collision = true
+size = Vector3(3, 1, 1)
+material = SubResource("StandardMaterial3D_7sm6c")
+
+[node name="Wall" type="CSGBox3D" parent="stage"]
+transform = Transform3D(2.98023e-08, -1, 0, 1, 2.98023e-08, 0, 0, 0, 1, -10, 2.26854, -1)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_7sm6c")
+
+[node name="Wall2" type="CSGBox3D" parent="stage"]
+transform = Transform3D(2.98023e-08, -1, 0, 1, 2.98023e-08, 0, 0, 0, 1, 10, 2.26854, -1)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_7sm6c")
+
+[node name="Wall3" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-1.3027e-15, 4.37114e-08, 1, 1, 2.98023e-08, 0, -2.98023e-08, 1, -4.37114e-08, 0, 2.26854, -10)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_7sm6c")
+
+[node name="Wall4" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-1.3027e-15, 4.37114e-08, 1, 1, 2.98023e-08, 0, -2.98023e-08, 1, -4.37114e-08, 0, 2.26854, 8)
 use_collision = true
 size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_7sm6c")
@@ -60,7 +157,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 
 [node name="Head" type="Node3D" parent="Player/Neck"]
 
-[node name="Camera3D" type="Camera3D" parent="Player/Neck/Head"]
+[node name="Eyes" type="Node3D" parent="Player/Neck/Head"]
+
+[node name="Camera3D" type="Camera3D" parent="Player/Neck/Head/Eyes"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Neck/Head/Eyes"]
+root_node = NodePath("../Camera3D")
+libraries = {
+"": SubResource("AnimationLibrary_pien3")
+}
 
 [node name="Standing_Body" type="CollisionShape3D" parent="Player"]
 shape = SubResource("CapsuleShape3D_4c15p")

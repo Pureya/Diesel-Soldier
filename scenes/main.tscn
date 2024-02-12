@@ -1,0 +1,75 @@
+[gd_scene load_steps=10 format=3 uid="uid://bjbkw8o2jpvgk"]
+
+[ext_resource type="Texture2D" uid="uid://dvm5jwqv4kkqi" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_48xma"]
+[ext_resource type="Texture2D" uid="uid://b1qfmk4kbqgyd" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_o4ljb"]
+[ext_resource type="Script" path="res://scripts/controller.gd" id="3_10ski"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7sm6c"]
+albedo_texture = ExtResource("1_48xma")
+uv1_triplanar = true
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_kgctd"]
+panorama = ExtResource("2_o4ljb")
+
+[sub_resource type="Sky" id="Sky_djsum"]
+sky_material = SubResource("PanoramaSkyMaterial_kgctd")
+
+[sub_resource type="Environment" id="Environment_1x60k"]
+background_mode = 2
+sky = SubResource("Sky_djsum")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4c15p"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_53j3v"]
+radius = 0.4
+height = 1.2
+
+[node name="World" type="Node3D"]
+
+[node name="stage" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_7sm6c")
+
+[node name="Floor2" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26854, 15)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_7sm6c")
+
+[node name="env" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.966517, -0.0849183, -0.242143, -0.137469, -0.625459, 0.768052, -0.216672, 0.775623, 0.592843, 0, 3.51903, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_1x60k")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("3_10ski")
+
+[node name="Neck" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="Head" type="Node3D" parent="Player/Neck"]
+
+[node name="Camera3D" type="Camera3D" parent="Player/Neck/Head"]
+
+[node name="Standing_Body" type="CollisionShape3D" parent="Player"]
+shape = SubResource("CapsuleShape3D_4c15p")
+
+[node name="Crouching_Body" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("CapsuleShape3D_53j3v")
+disabled = true
+
+[node name="Check_Head" type="RayCast3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+target_position = Vector3(0, 2, 0)

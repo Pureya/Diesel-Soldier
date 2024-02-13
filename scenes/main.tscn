@@ -1,12 +1,9 @@
 [gd_scene load_steps=13 format=3 uid="uid://bjbkw8o2jpvgk"]
 
-[ext_resource type="Texture2D" uid="uid://dvm5jwqv4kkqi" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_48xma"]
+[ext_resource type="Material" uid="uid://bfp7ot6n8qemg" path="res://Dark Grid.tres" id="1_smwy6"]
 [ext_resource type="Texture2D" uid="uid://b1qfmk4kbqgyd" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_o4ljb"]
+[ext_resource type="Material" uid="uid://ctdfak426rpt1" path="res://Orange Grid.tres" id="2_sbh2t"]
 [ext_resource type="Script" path="res://scripts/controller.gd" id="3_10ski"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7sm6c"]
-albedo_texture = ExtResource("1_48xma")
-uv1_triplanar = true
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_kgctd"]
 panorama = ExtResource("2_o4ljb")
@@ -19,6 +16,33 @@ background_mode = 2
 sky = SubResource("Sky_djsum")
 tonemap_mode = 2
 glow_enabled = true
+
+[sub_resource type="Animation" id="Animation_6y5a7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_o0jp7"]
 resource_name = "jump"
@@ -48,33 +72,6 @@ tracks/1/keys = {
 "values": [Vector3(0, 0, 0), Vector3(-0.0523599, 0, 0), Vector3(0, 0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_6y5a7"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_pien3"]
 _data = {
 "RESET": SubResource("Animation_6y5a7"),
@@ -91,62 +88,263 @@ height = 1.2
 
 [node name="stage" type="Node3D" parent="."]
 
-[node name="Floor" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+[node name="Floors" type="CSGCombiner3D" parent="stage"]
 use_collision = true
-size = Vector3(20, 1, 20)
-material = SubResource("StandardMaterial3D_7sm6c")
 
-[node name="Floor2" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26854, 13)
-use_collision = true
-size = Vector3(20, 1, 20)
-material = SubResource("StandardMaterial3D_7sm6c")
+[node name="FloorMain" type="CSGBox3D" parent="stage/Floors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.5, 0.5)
+size = Vector3(14, 1, 12)
+material = ExtResource("1_smwy6")
 
-[node name="Step" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 8.5, 1.26854, -0.5)
-use_collision = true
-size = Vector3(3, 1, 5)
-material = SubResource("StandardMaterial3D_7sm6c")
+[node name="StairsTo2" type="CSGPolygon3D" parent="stage/Floors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0, 1)
+polygon = PackedVector2Array(2, 0, 2, 1, 2, 1, 4, 0)
+depth = 2.0
+material = ExtResource("1_smwy6")
 
-[node name="Step2" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 8.5, 0.26854, -4.5)
-use_collision = true
-size = Vector3(3, 1, 1)
-material = SubResource("StandardMaterial3D_7sm6c")
+[node name="StairsToSpawn2" type="CSGPolygon3D" parent="stage/Floors"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.5, 0, 10.5)
+polygon = PackedVector2Array(2, 0, 2, 1, 2, 1, 4, 0)
+depth = 2.0
+material = ExtResource("1_smwy6")
 
-[node name="Wall" type="CSGBox3D" parent="stage"]
-transform = Transform3D(2.98023e-08, -1, 0, 1, 2.98023e-08, 0, 0, 0, 1, -10, 2.26854, -1)
-use_collision = true
-size = Vector3(20, 1, 20)
-material = SubResource("StandardMaterial3D_7sm6c")
+[node name="StairsToSpawn1" type="CSGPolygon3D" parent="stage/Floors"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.5, 0, -9.5)
+polygon = PackedVector2Array(0, 0, -1, 0, -1, 1, 2, 1, 4, 0)
+depth = 2.0
+material = ExtResource("1_smwy6")
 
-[node name="Wall2" type="CSGBox3D" parent="stage"]
-transform = Transform3D(2.98023e-08, -1, 0, 1, 2.98023e-08, 0, 0, 0, 1, 10, 2.26854, -1)
-use_collision = true
-size = Vector3(20, 1, 20)
-material = SubResource("StandardMaterial3D_7sm6c")
+[node name="Room2" type="CSGBox3D" parent="stage/Floors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.5, 0)
+size = Vector3(3, 1, 6)
+material = ExtResource("1_smwy6")
 
-[node name="Wall3" type="CSGBox3D" parent="stage"]
-transform = Transform3D(-1.3027e-15, 4.37114e-08, 1, 1, 2.98023e-08, 0, -2.98023e-08, 1, -4.37114e-08, 0, 2.26854, -10)
-use_collision = true
-size = Vector3(20, 1, 20)
-material = SubResource("StandardMaterial3D_7sm6c")
+[node name="StorageRoom" type="CSGBox3D" parent="stage/Floors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, -7.5)
+size = Vector3(3, 1, 4)
+material = ExtResource("1_smwy6")
 
-[node name="Wall4" type="CSGBox3D" parent="stage"]
-transform = Transform3D(-1.3027e-15, 4.37114e-08, 1, 1, 2.98023e-08, 0, -2.98023e-08, 1, -4.37114e-08, 0, 2.26854, 8)
+[node name="StorageRoom2" type="CSGBox3D" parent="stage/Floors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, -7.5)
+size = Vector3(3, 1, 4)
+material = ExtResource("1_smwy6")
+
+[node name="StorageRoom3" type="CSGBox3D" parent="stage/Floors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, -0.5, -7.5)
+size = Vector3(4, 1, 4)
+material = ExtResource("1_smwy6")
+
+[node name="SpawnRoom1" type="CSGBox3D" parent="stage/Floors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.5, -12.5)
+size = Vector3(8, 1, 4)
+material = ExtResource("1_smwy6")
+
+[node name="SpawnRoom2" type="CSGBox3D" parent="stage/Floors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.5, 10.5)
+size = Vector3(8, 1, 4)
+material = ExtResource("1_smwy6")
+
+[node name="Walls" type="CSGCombiner3D" parent="stage"]
 use_collision = true
-size = Vector3(20, 1, 20)
-material = SubResource("StandardMaterial3D_7sm6c")
+
+[node name="Wall1" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.499, 2.018, 6.49)
+size = Vector3(10, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall19" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.001, 2.018, 8.49)
+size = Vector3(3, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall21" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.001, 2.018, 8.49)
+size = Vector3(3, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall22" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -4.5, 2.018, 7.5)
+size = Vector3(2, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall23" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.5, 2.018, 7.5)
+size = Vector3(2, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall24" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.45, 2.018, 10.5)
+size = Vector3(4, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall25" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7.45, 2.018, 10.5)
+size = Vector3(4, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall20" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.501, 2.018, 12.49)
+size = Vector3(8, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall2" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 7.49867, 2.01796, -1.49533)
+size = Vector3(16, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall3" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.49867, 2.01796, -9.49533)
+size = Vector3(4, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall14" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.99867, 2.01796, -10.4953)
+size = Vector3(3, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall16" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00133, 2.01796, -10.4953)
+size = Vector3(3, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall17" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.45, 2.018, -12.495)
+size = Vector3(5, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall18" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.45, 2.018, -12.495)
+size = Vector3(5, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall15" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.49867, 2.01796, -14.4953)
+size = Vector3(8, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall4" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.49867, 2.01796, -7.49533)
+size = Vector3(4, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall5" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.49867, 2.01796, -7.99533)
+size = Vector3(5, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall6" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.498674, 2.01796, -7.99533)
+size = Vector3(5, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall7" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.501326, 2.01796, -7.49533)
+size = Vector3(4, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall8" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.00132561, 2.01796, -5.49533)
+size = Vector3(1, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall9" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 2.99867, 2.01796, -5.49533)
+size = Vector3(1, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall10" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -3.50133, 2.01796, -9.49533)
+size = Vector3(6, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall11" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -6.5, 2.018, -5.25)
+size = Vector3(8.5, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall12" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -6.50133, 2.01796, 3.76004)
+size = Vector3(5.5, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall26" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -8.50133, 2.01796, 2.01004)
+size = Vector3(2, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall27" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -8.50133, 2.01796, -1.98996)
+size = Vector3(2, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall28" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -11.5348, 2.01796, 0.0100441)
+size = Vector3(6, 5, 0.0678828)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall29" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -10.0013, 2.01796, 3.01004)
+size = Vector3(3, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall31" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -7.49718, 2.01796, 1.01004)
+size = Vector3(2.0083, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall32" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -7.5, 2.018, -1)
+size = Vector3(2, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall30" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -10.0013, 2.01796, -2.98996)
+size = Vector3(3, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Wall13" type="CSGBox3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.50133, 2.01796, 6.50467)
+size = Vector3(2, 5, 0.001)
+material = ExtResource("2_sbh2t")
+
+[node name="Window" type="CSGSphere3D" parent="stage/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5176, 2.99405, 0.0029223)
+operation = 2
+material = ExtResource("1_smwy6")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 5, -1)
+material_override = ExtResource("1_smwy6")
+size = Vector3(22, 1, 32)
 
 [node name="env" type="Node3D" parent="."]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
-transform = Transform3D(-0.966517, -0.0849183, -0.242143, -0.137469, -0.625459, 0.768052, -0.216672, 0.775623, 0.592843, 0, 3.51903, 0)
-shadow_enabled = true
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
 environment = SubResource("Environment_1x60k")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="env"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -3, 4.25361, -2)
+light_color = Color(0.968627, 0.941176, 0.286275, 1)
+shadow_enabled = true
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="env"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 4, 4.25361, -2)
+light_color = Color(0.968627, 0.941176, 0.286275, 1)
+shadow_enabled = true
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="env"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 4, 4.25361, 4)
+light_color = Color(0.968627, 0.941176, 0.286275, 1)
+shadow_enabled = true
+
+[node name="SpotLight3D4" type="SpotLight3D" parent="env"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -3, 4.25361, 4)
+light_color = Color(0.968627, 0.941176, 0.286275, 1)
+shadow_enabled = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 14.6486, 0)
+shadow_enabled = true
 
 [node name="Player" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
